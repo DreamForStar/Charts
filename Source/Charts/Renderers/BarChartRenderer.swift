@@ -352,6 +352,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 
                 context.setFillColor(dataSet.barShadowColor.cgColor)
                 context.fill(barRect)
+              
             }
         }
         
@@ -379,7 +380,36 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 context.setFillColor(dataSet.color(atIndex: j).cgColor)
             }
             
-            context.fill(barRect)
+//            context.fill(barRect)
+            
+            context.beginPath()
+            context.move(to: CGPoint(
+                x: barRect.origin.x,
+                y: barRect.origin.y))
+
+            var conerRadius = 0.0
+            if barRect.width < barRect.height {
+                conerRadius = barRect.width / 2
+            } else {
+                conerRadius = barRect.height / 2
+            }
+            // 右上
+            context.addArc(tangent1End: CGPoint(x: barRect.origin.x + barRect.width, y: barRect.origin.y),
+                           tangent2End: CGPoint(x: barRect.origin.x + barRect.width, y: barRect.origin.y + barRect.height), radius: conerRadius);
+
+            // 右下
+            context.addArc(tangent1End: CGPoint(x: barRect.origin.x + barRect.width, y: barRect.origin.y + barRect.height),
+                           tangent2End: CGPoint(x: barRect.origin.x, y: barRect.origin.y + barRect.height), radius: conerRadius);
+
+            // 左下
+            context.addArc(tangent1End: CGPoint(x: barRect.origin.x, y: barRect.origin.y + barRect.height),
+                           tangent2End: CGPoint(x: barRect.origin.x, y: barRect.origin.y), radius: conerRadius);
+
+            // 左上
+            context.addArc(tangent1End: CGPoint(x: barRect.origin.x, y: barRect.origin.y),
+                           tangent2End: CGPoint(x: barRect.origin.x + barRect.width, y: barRect.origin.y), radius: conerRadius);
+
+            context.fillPath()
             
             if drawBorder
             {
@@ -744,7 +774,42 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 
                 setHighlightDrawPos(highlight: high, barRect: barRect)
                 
-                context.fill(barRect)
+//                context.fill(barRect)
+                    var conerRadius = 0.0
+                    let width = barRect.width  + 4
+                    var height = barRect.height  + 4
+                    let x = barRect.origin.x - 2
+                    let y = barRect.origin.y - 2
+                         context.beginPath()
+                         context.move(to: CGPoint(
+                             x: x,
+                             y: y))
+
+                
+
+                
+                         if width < height {
+                             conerRadius = width / 2
+                         } else {
+                             conerRadius = height / 2
+                         }
+                         // 右上
+                         context.addArc(tangent1End: CGPoint(x: x + width, y: y),
+                                        tangent2End: CGPoint(x: x + width, y: y + height), radius: conerRadius);
+
+                         // 右下
+                         context.addArc(tangent1End: CGPoint(x:  x + width, y: y + height),
+                                        tangent2End: CGPoint(x: x, y: y + height), radius: conerRadius);
+
+                         // 左下
+                         context.addArc(tangent1End: CGPoint(x: x, y: y + height),
+                                        tangent2End: CGPoint(x: x, y: y), radius: conerRadius);
+
+                         // 左上
+                         context.addArc(tangent1End: CGPoint(x: x, y: y),
+                                        tangent2End: CGPoint(x: x + width, y: y), radius: conerRadius);
+
+                         context.fillPath()
             }
         }
     }
